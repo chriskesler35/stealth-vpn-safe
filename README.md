@@ -59,7 +59,8 @@ Remote Laptop/Phone
 - `docs/FALLBACK-SECONDARY-VPS.md` for the cleaner two-VPS fallback layout
 - `docs/SECONDARY-DEPLOY.md` for the dedicated fallback-VPS rollout
 - `docs/HOME-SERVER-QUICKSTART.md` for the Linux home-gateway setup path
-- `docs/HOME-SERVER-WINDOWS.md` for the Windows home-server setup path
+- `docs/HOME-SERVER-WINDOWS.md` for the Windows home-server relay path
+- `docs/DIRECT-WIREGUARD-WINDOWS.md` for the simpler direct peer-to-peer Windows setup
 - `docs/HOME-GATEWAY-SYSTEMD.md` for persistent tunnel startup on the home gateway
 - `docs/HEALTH-CHECKS.md` for relay verification
 - `docs/ROUTER-STATIC-ROUTES.md` for moving from NAT to cleaner LAN routing
@@ -123,6 +124,7 @@ stealth-vpn-safe/
     ├── ARCHITECTURE.md
     ├── DECISIONS.md
     ├── DEPLOY.md
+    ├── DIRECT-WIREGUARD-WINDOWS.md
     ├── FALLBACK-OPENVPN.md
     ├── FALLBACK-SECONDARY-VPS.md
     ├── FIREWALL-NOTES.md
