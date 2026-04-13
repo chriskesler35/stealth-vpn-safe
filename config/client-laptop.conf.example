@@ -1,0 +1,14 @@
+# Roaming client config
+# Import into WireGuard on a laptop or phone after replacing placeholders.
+
+[Interface]
+Address = 10.70.0.10/32
+PrivateKey = <CLIENT_PRIVATE_KEY>
+DNS = 10.70.0.1
+
+[Peer]
+PublicKey = <VPS_PUBLIC_KEY>
+PresharedKey = <PRESHARED_KEY>
+Endpoint = vpn.example.com:51820
+AllowedIPs = 10.70.0.0/24, 192.168.50.0/24
+PersistentKeepalive = 25

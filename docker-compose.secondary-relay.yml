@@ -1,0 +1,38 @@
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: fallback-wireguard
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: UTC
+    volumes:
+      - ./wireguard-secondary:/config
+      - /lib/modules:/lib/modules:ro
+    ports:
+      - "${FALLBACK_WG_PORT:-51820}:${FALLBACK_WG_PORT:-51820}/udp"
+    sysctls:
+      net.ipv4.ip_forward: 1
+      net.ipv4.conf.all.src_valid_mark: 1
+
+  openvpn:
+    image: kylemanna/openvpn:2.6
+    container_name: fallback-openvpn
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "${FALLBACK_OPENVPN_PORT:-443}:1194/tcp"
+    volumes:
+      - ./openvpn:/etc/openvpn
+    sysctls:
+      net.ipv4.ip_forward: 1
+      net.ipv4.conf.all.src_valid_mark: 1
+
+# Intended for a dedicated fallback VPS.
+# WireGuard handles the secondary home-gateway tunnel on UDP.
+# OpenVPN provides the TCP 443 emergency client ingress.

@@ -1,0 +1,21 @@
+services:
+  openvpn:
+    image: kylemanna/openvpn:2.6
+    container_name: relay-openvpn
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "443:1194/tcp"
+    volumes:
+      - ./openvpn:/etc/openvpn
+    sysctls:
+      net.ipv4.ip_forward: 1
+      net.ipv4.conf.all.src_valid_mark: 1
+
+# This stack is intended as a manual fallback.
+# On a single-IP VPS, it conflicts with the Caddy relay because both want TCP 443.
+# Use one of these patterns:
+# 1. Stop the HTTPS relay and start this stack temporarily.
+# 2. Use a second public IP.
+# 3. Run this stack on a separate fallback VPS.

@@ -1,0 +1,24 @@
+{
+    email {$ACME_EMAIL}
+}
+
+# WireGuard admin UI
+{$PUBLIC_HOST} {
+    encode zstd gzip
+
+    @wg path /wg* /wg/*
+    handle @wg {
+        uri strip_prefix /wg
+        reverse_proxy wg-easy:51821
+    }
+
+    handle {
+        respond "Relay online" 200
+    }
+}
+
+# Example: publish a home service through the tunnel
+ha.{$PUBLIC_HOST} {
+    encode zstd gzip
+    reverse_proxy {$HOME_ASSISTANT_UPSTREAM}
+}

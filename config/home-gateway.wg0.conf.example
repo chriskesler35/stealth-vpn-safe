@@ -1,0 +1,23 @@
+# Home gateway peer config
+# Run this on a Linux VM/Pi inside the home network.
+# Replace placeholder keys before use.
+
+[Interface]
+Address = 10.70.0.2/32
+PrivateKey = <HOME_GATEWAY_PRIVATE_KEY>
+ListenPort = 51820
+
+# Enable forwarding on the home gateway host itself:
+#   sysctl -w net.ipv4.ip_forward=1
+#   sysctl -w net.ipv6.conf.all.forwarding=1
+
+# Example firewall/NAT rules. Adjust interface names as needed.
+# PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -s 10.70.0.0/24 -d 192.168.50.0/24 -j MASQUERADE
+# PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -s 10.70.0.0/24 -d 192.168.50.0/24 -j MASQUERADE
+
+[Peer]
+PublicKey = <VPS_PUBLIC_KEY>
+PresharedKey = <PRESHARED_KEY>
+Endpoint = vpn.example.com:51820
+AllowedIPs = 10.70.0.0/24
+PersistentKeepalive = 25

@@ -1,0 +1,48 @@
+services:
+  caddy:
+    image: caddy:2.8
+    container_name: relay-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      ACME_EMAIL: ${ACME_EMAIL}
+      PUBLIC_HOST: ${PUBLIC_HOST}
+      HOME_ASSISTANT_UPSTREAM: ${HOME_ASSISTANT_UPSTREAM}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - wg-easy
+
+  wg-easy:
+    image: ghcr.io/wg-easy/wg-easy:latest
+    container_name: relay-wireguard
+    restart: unless-stopped
+    environment:
+      LANG: en
+      WG_HOST: ${PUBLIC_HOST}
+      PASSWORD_HASH: ${WG_UI_PASSWORD_HASH}
+      WG_PORT: ${WG_PORT}
+      WG_DEFAULT_ADDRESS: ${WG_DEFAULT_ADDRESS}
+      WG_DEFAULT_DNS: ${WG_DEFAULT_DNS}
+      WG_ALLOWED_IPS: 10.70.0.0/24,${HOME_LAN_CIDR}
+      WG_PERSISTENT_KEEPALIVE: 25
+      UI_TRAFFIC_STATS: true
+    volumes:
+      - ./wireguard:/etc/wireguard
+    ports:
+      - "${WG_PORT}:${WG_PORT}/udp"
+      - "127.0.0.1:51821:51821"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      net.ipv4.ip_forward: 1
+      net.ipv4.conf.all.src_valid_mark: 1
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,9 @@
+OpenVPN client profiles are generated, not hand-authored.
+
+After initializing the OpenVPN PKI:
+1. Build a client cert:
+   docker run -it --rm -v "$PWD/openvpn:/etc/openvpn" kylemanna/openvpn:2.6 easyrsa build-client-full laptop nopass
+2. Export the client profile:
+   docker run --rm -v "$PWD/openvpn:/etc/openvpn" kylemanna/openvpn:2.6 ovpn_getclient laptop > generated/client-laptop.ovpn
+
+Import generated/client-laptop.ovpn into the OpenVPN client of your choice.

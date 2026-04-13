@@ -1,0 +1,29 @@
+# Plain WireGuard server config for the VPS relay
+# This replaces wg-easy when you want a more declarative setup.
+# Generate real keys before use.
+
+[Interface]
+Address = 10.70.0.1/24
+ListenPort = 51820
+PrivateKey = <VPS_PRIVATE_KEY>
+SaveConfig = false
+
+# Enable forwarding on the VPS host itself:
+#   sysctl -w net.ipv4.ip_forward=1
+# Example NAT rule if needed for internet egress from VPN clients:
+# PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -s 10.70.0.0/24 -o eth0 -j MASQUERADE
+# PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -s 10.70.0.0/24 -o eth0 -j MASQUERADE
+
+# Home gateway peer
+[Peer]
+PublicKey = <HOME_GATEWAY_PUBLIC_KEY>
+PresharedKey = <PRESHARED_KEY>
+AllowedIPs = 10.70.0.2/32, 192.168.50.0/24
+PersistentKeepalive = 25
+
+# Roaming client peer example
+[Peer]
+PublicKey = <CLIENT_PUBLIC_KEY>
+PresharedKey = <PRESHARED_KEY>
+AllowedIPs = 10.70.0.10/32
+PersistentKeepalive = 25

@@ -1,0 +1,9 @@
+.env
+wireguard/
+generated/
+secrets/
+caddy_data/
+caddy_config/
+*.key
+*.pub
+*.psk

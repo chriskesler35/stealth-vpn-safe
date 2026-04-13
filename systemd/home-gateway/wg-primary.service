@@ -1,0 +1,14 @@
+[Unit]
+Description=Primary WireGuard tunnel to main VPS relay
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/wg-quick up /etc/wireguard/wg0.conf
+ExecStop=/usr/bin/wg-quick down /etc/wireguard/wg0.conf
+TimeoutStartSec=30
+
+[Install]
+WantedBy=multi-user.target
