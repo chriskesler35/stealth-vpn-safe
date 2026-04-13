@@ -1,25 +1,73 @@
-# Home-Lab Remote Access Gateway with VPS Relay
+# stealth-vpn-safe
 
-This is a safe, open-source starter for a Tailscale-like remote access setup without relying on a commercial control plane.
+Safe, open-source remote access starter built around WireGuard.
 
-## Start Here
+This repo now has one clear default path:
+- **most people should start with direct WireGuard to a Windows home server**
+- the **VPS relay** and **fallback** designs are still included, but they are advanced paths
 
-If you want the fastest path instead of reading everything:
-- start with `docs/START-HERE.md`
-- for the common personal setup, use `docs/DIRECT-WIREGUARD-WINDOWS.md`
-- on Windows, run `powershell -ExecutionPolicy Bypass -File .\scripts\doctor-windows.ps1`
-- on Linux, run `./scripts/doctor-linux.sh`
+It is intended for personal remote access, home labs, and self-hosted services.
 
-It is designed for:
-- remote access to a home lab behind NAT
-- a public VPS relay with a stable IP
-- WireGuard for fast private connectivity
-- Caddy for publishing selected internal services over HTTPS
-- optional fallback transports documented in the architecture notes
+It is **not** intended to hide traffic from enterprise inspection, evade corporate controls, or bypass network policy.
 
-It is not designed to evade network policy, hide traffic from enterprise inspection, or bypass corporate controls.
+## Best Starting Point
 
-## Topology
+If you want the fastest path to a working setup, start here:
+
+- Windows home server + direct WireGuard: `docs/DIRECT-WIREGUARD-WINDOWS.md`
+- Windows prerequisite check: `powershell -ExecutionPolicy Bypass -File .\scripts\doctor-windows.ps1`
+- Linux prerequisite check: `./scripts/doctor-linux.sh`
+- General path chooser: `docs/START-HERE.md`
+
+## Common Use Case
+
+The most common setup for this repo is:
+- one always-on Windows server at home
+- one laptop or phone connecting remotely
+- RDP over WireGuard
+- no public RDP exposure
+- optional DDNS for changing home IPs
+
+Topology:
+
+```text
+Laptop / Phone
+    |
+    | WireGuard
+    v
+Windows Home Server
+```
+
+## Quickstart: Direct Windows Setup
+
+1. Install WireGuard on the Windows home server.
+2. Run the Windows doctor script.
+3. Bootstrap the repo.
+4. Render the direct server/client configs.
+5. Install the server tunnel as a Windows service.
+6. Port-forward UDP `51820` on the home router.
+7. Import the client config on the laptop or phone.
+8. RDP to `10.70.0.1` over the VPN.
+
+Main docs for that path:
+- `docs/DIRECT-WIREGUARD-WINDOWS.md`
+- `docs/DDNS-DUCKDNS-WINDOWS.md`
+- `docs/RDP-HARDENING-WINDOWS.md`
+- `docs/WINDOWS-GATEWAY-NOTES.md`
+
+## Other Supported Paths
+
+### Linux Home Gateway + VPS Relay
+
+Use this if you want a more general remote-access gateway with a public relay VPS.
+
+Read:
+- `docs/DEPLOY.md`
+- `docs/ARCHITECTURE.md`
+- `docs/HOME-SERVER-QUICKSTART.md`
+- `docs/HOME-SERVER-WINDOWS.md`
+
+Topology:
 
 ```text
 Remote Laptop/Phone
@@ -31,14 +79,13 @@ Remote Laptop/Phone
 | - Public IP       |
 | - WireGuard hub   |
 | - Caddy           |
-| - Optional UI     |
 +-------------------+
         |
         | WireGuard site-to-site tunnel
         v
 +-------------------+
 | Home Gateway      |
-| - Small VM/Pi     |
+| - Linux VM/Pi     |
 | - Routes home LAN |
 +-------------------+
         |
@@ -46,60 +93,62 @@ Remote Laptop/Phone
   Home services and devices
 ```
 
-## What You Get
+### Dedicated Fallback VPS
 
-- `docker-compose.yml` for the VPS relay
-- `caddy/Caddyfile` with examples for publishing services through the tunnel
-- `.env.example` for deployment variables
-- `config/home-gateway.wg0.conf.example` for the home peer
-- `config/client-laptop.conf.example` for a roaming client
-- `scripts/bootstrap-linux.sh` to generate keys, preshared keys, and a starter `.env`
-- `scripts/render-peer-configs.sh` to render the primary home gateway and roaming client configs once the relay has a public key
-- `scripts/render-server-config.sh` to render a plain WireGuard server config if you want to avoid `wg-easy`
-- `scripts/render-secondary-path-configs.sh` to render the secondary-VPS fallback WireGuard pair
-- `scripts/init-openvpn.sh` to generate a TCP 443 OpenVPN fallback config
-- `Makefile` for common bootstrap, render, start, and health-check tasks
-- `scripts/doctor-windows.ps1` for Windows prerequisite and next-step checks
-- `scripts/doctor-linux.sh` for Linux prerequisite and next-step checks
-- `scripts/check-relays.sh` to verify the main and fallback relay endpoints quickly
-- `docs/START-HERE.md` as the entry point for new users
-- `docs/ARCHITECTURE.md` with network plan, routing, and fallback guidance
-- `docs/DEPLOY.md` with a concrete deployment sequence
-- `docs/PLAIN-WIREGUARD.md` for the file-based relay option
-- `docs/FALLBACK-OPENVPN.md` for emergency TCP 443 fallback deployment
-- `docs/FALLBACK-SECONDARY-VPS.md` for the cleaner two-VPS fallback layout
-- `docs/SECONDARY-DEPLOY.md` for the dedicated fallback-VPS rollout
-- `docs/HOME-SERVER-QUICKSTART.md` for the Linux home-gateway setup path
-- `docs/HOME-SERVER-WINDOWS.md` for the Windows home-server relay path
-- `docs/DIRECT-WIREGUARD-WINDOWS.md` for the simpler direct peer-to-peer Windows setup
-- `docs/DDNS-DUCKDNS-WINDOWS.md` for a practical Windows DDNS path
-- `docs/RDP-HARDENING-WINDOWS.md` for restricting RDP to the WireGuard subnet
-- `docs/HOME-GATEWAY-SYSTEMD.md` for persistent tunnel startup on the home gateway
-- `docs/HEALTH-CHECKS.md` for relay verification
-- `docs/ROUTER-STATIC-ROUTES.md` for moving from NAT to cleaner LAN routing
-- `docs/FIREWALL-NOTES.md` for host and relay firewall guidance
-- `docs/TROUBLESHOOTING.md` for common failure modes
-- `docs/DECISIONS.md` as a rollout checklist
+Use this only after the primary path works.
 
-## Design Summary
+Read:
+- `docs/SECONDARY-DEPLOY.md`
+- `docs/FALLBACK-SECONDARY-VPS.md`
+- `docs/FALLBACK-OPENVPN.md`
 
-- The VPS is the rendezvous point with a stable public IP or DNS name.
-- The home gateway keeps a persistent WireGuard tunnel to the VPS.
-- Remote clients connect to the VPS and reach home resources through the home gateway.
-- Selected home services can also be published through Caddy on the VPS without exposing the home router directly.
+## What’s In The Repo
 
-## Recommended Deployment Order
+### Scripts
 
-1. Fill out `docs/DECISIONS.md` with your real hostnames, LAN CIDR, and first app.
-2. Run `make bootstrap` to generate secrets and a starter `.env`.
-3. Choose a relay mode: `wg-easy` for convenience or plain WireGuard for a file-based setup.
-4. Bring up the VPS relay.
-5. Render the peer configs once the relay exposes its WireGuard public key.
-6. Connect the home gateway to the VPS.
-7. Connect one roaming client.
-8. Add reverse-proxied home services in Caddy one by one.
-9. Move from NAT to static routes using `docs/ROUTER-STATIC-ROUTES.md` once the path is stable.
-10. Add the secondary fallback VPS if you need a more resilient path.
+- `scripts/doctor-windows.ps1` - Windows prerequisite and next-step check
+- `scripts/doctor-linux.sh` - Linux prerequisite and next-step check
+- `scripts/bootstrap-windows.ps1` - bootstrap secrets and `.env` on Windows
+- `scripts/bootstrap-linux.sh` - bootstrap secrets and `.env` on Linux
+- `scripts/render-direct-windows.ps1` - generate direct Windows server/client WireGuard configs
+- `scripts/render-peer-configs.ps1` - render Windows-side relay peer configs
+- `scripts/render-peer-configs.sh` - render Linux relay peer configs
+- `scripts/render-server-config.sh` - render plain WireGuard server config
+- `scripts/render-secondary-path-configs.sh` - render the fallback WireGuard pair
+- `scripts/update-duckdns.ps1` - update DuckDNS from the Windows home server
+- `scripts/lockdown-rdp-to-wireguard.ps1` - restrict RDP to the WireGuard subnet
+- `scripts/restore-default-rdp-firewall.ps1` - undo the RDP lockdown
+- `scripts/check-relays.sh` - relay health checks
+- `scripts/init-openvpn.sh` - initialize OpenVPN fallback config
+- `scripts/hash-wg-ui-password.sh` - helper for `wg-easy`
+
+### Core Docs
+
+- `docs/START-HERE.md` - choose the right deployment path
+- `docs/DECISIONS.md` - fill in your real values before rollout
+- `docs/TROUBLESHOOTING.md` - debugging order and likely failure modes
+- `docs/FIREWALL-NOTES.md` - firewall guidance
+- `docs/ROUTER-STATIC-ROUTES.md` - moving from NAT to static routes
+- `docs/HEALTH-CHECKS.md` - verification helpers
+
+### Windows-Focused Docs
+
+- `docs/DIRECT-WIREGUARD-WINDOWS.md`
+- `docs/HOME-SERVER-WINDOWS.md`
+- `docs/DDNS-DUCKDNS-WINDOWS.md`
+- `docs/RDP-HARDENING-WINDOWS.md`
+- `docs/WINDOWS-GATEWAY-NOTES.md`
+
+### Linux / Relay / Advanced Docs
+
+- `docs/DEPLOY.md`
+- `docs/ARCHITECTURE.md`
+- `docs/PLAIN-WIREGUARD.md`
+- `docs/HOME-SERVER-QUICKSTART.md`
+- `docs/HOME-GATEWAY-SYSTEMD.md`
+- `docs/SECONDARY-DEPLOY.md`
+- `docs/FALLBACK-SECONDARY-VPS.md`
+- `docs/FALLBACK-OPENVPN.md`
 
 ## Repo Layout
 
@@ -113,57 +162,22 @@ stealth-vpn-safe/
 ├── docker-compose.secondary-relay.yml
 ├── docker-compose.wireguard-core.yml
 ├── caddy/
-│   └── Caddyfile
 ├── config/
-│   ├── client-laptop.conf.example
-│   ├── client-laptop.ovpn.notes.txt
-│   ├── home-gateway-secondary.wg0.conf.example
-│   ├── home-gateway.wg0.conf.example
-│   ├── server-secondary-wg0.conf.example
-│   └── server-wg0.conf.example
+├── docs/
 ├── scripts/
-│   ├── bootstrap-linux.sh
-│   ├── check-relays.sh
-│   ├── doctor-linux.sh
-│   ├── doctor-windows.ps1
-│   ├── hash-wg-ui-password.sh
-│   ├── init-openvpn.sh
-│   ├── render-peer-configs.sh
-│   ├── render-secondary-path-configs.sh
-│   └── render-server-config.sh
-├── systemd/
-│   └── home-gateway/
-│       ├── 99-home-gateway-forwarding.conf
-│       ├── wg-primary.service
-│       └── wg-secondary.service
-└── docs/
-    ├── ARCHITECTURE.md
-    ├── START-HERE.md
-    ├── DECISIONS.md
-    ├── DDNS-DUCKDNS-WINDOWS.md
-    ├── DEPLOY.md
-    ├── DIRECT-WIREGUARD-WINDOWS.md
-    ├── FALLBACK-OPENVPN.md
-    ├── FALLBACK-SECONDARY-VPS.md
-    ├── FIREWALL-NOTES.md
-    ├── HEALTH-CHECKS.md
-    ├── HOME-GATEWAY-SYSTEMD.md
-    ├── HOME-SERVER-QUICKSTART.md
-    ├── HOME-SERVER-WINDOWS.md
-    ├── RDP-HARDENING-WINDOWS.md
-    ├── PLAIN-WIREGUARD.md
-    ├── ROUTER-STATIC-ROUTES.md
-    ├── SECONDARY-DEPLOY.md
-    └── TROUBLESHOOTING.md
+└── systemd/
 ```
 
 ## Notes
 
-- The VPS side assumes Linux.
-- The home-server side now has both Linux and Windows setup guides.
-- The sample home LAN CIDR is `192.168.50.0/24`.
-- The sample WireGuard overlay is `10.70.0.0/24`.
-- The sample OpenVPN and secondary fallback subnet is `10.71.0.0/24`.
-- On a single-IP VPS, OpenVPN on TCP 443 is a mutually exclusive fallback unless you add a second public IP or separate fallback host.
-- The bootstrap now generates separate preshared keys for the primary and fallback paths.
-- I have not deployed this in your environment, so treat the configs as a starter and adjust interface names, DNS, and firewall rules before going live.
+- The **Windows direct path** is the best starting point for personal remote RDP access.
+- The VPS relay path is more flexible, but it is not the simplest first deployment.
+- The fallback/OpenVPN material is intentionally secondary and should be added only after the primary path works.
+- The sample primary overlay is `10.70.0.0/24`.
+- The sample fallback overlay is `10.71.0.0/24`.
+- This repo includes both Windows and Linux setup material, but the relay side still assumes Linux.
+- Review and adapt firewall rules, addressing, and router settings before production use.
+
+## License
+
+MIT. See `LICENSE`.
