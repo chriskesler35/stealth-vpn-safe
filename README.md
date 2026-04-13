@@ -61,6 +61,8 @@ Remote Laptop/Phone
 - `docs/HOME-SERVER-QUICKSTART.md` for the Linux home-gateway setup path
 - `docs/HOME-SERVER-WINDOWS.md` for the Windows home-server relay path
 - `docs/DIRECT-WIREGUARD-WINDOWS.md` for the simpler direct peer-to-peer Windows setup
+- `docs/DDNS-DUCKDNS-WINDOWS.md` for a practical Windows DDNS path
+- `docs/RDP-HARDENING-WINDOWS.md` for restricting RDP to the WireGuard subnet
 - `docs/HOME-GATEWAY-SYSTEMD.md` for persistent tunnel startup on the home gateway
 - `docs/HEALTH-CHECKS.md` for relay verification
 - `docs/ROUTER-STATIC-ROUTES.md` for moving from NAT to cleaner LAN routing
@@ -123,6 +125,7 @@ stealth-vpn-safe/
 └── docs/
     ├── ARCHITECTURE.md
     ├── DECISIONS.md
+    ├── DDNS-DUCKDNS-WINDOWS.md
     ├── DEPLOY.md
     ├── DIRECT-WIREGUARD-WINDOWS.md
     ├── FALLBACK-OPENVPN.md
@@ -132,6 +135,7 @@ stealth-vpn-safe/
     ├── HOME-GATEWAY-SYSTEMD.md
     ├── HOME-SERVER-QUICKSTART.md
     ├── HOME-SERVER-WINDOWS.md
+    ├── RDP-HARDENING-WINDOWS.md
     ├── PLAIN-WIREGUARD.md
     ├── ROUTER-STATIC-ROUTES.md
     ├── SECONDARY-DEPLOY.md
