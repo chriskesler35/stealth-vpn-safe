@@ -58,6 +58,7 @@ Remote Laptop/Phone
 - `docs/FALLBACK-OPENVPN.md` for emergency TCP 443 fallback deployment
 - `docs/FALLBACK-SECONDARY-VPS.md` for the cleaner two-VPS fallback layout
 - `docs/SECONDARY-DEPLOY.md` for the dedicated fallback-VPS rollout
+- `docs/HOME-SERVER-QUICKSTART.md` for the practical home-gateway setup path
 - `docs/HOME-GATEWAY-SYSTEMD.md` for persistent tunnel startup on the home gateway
 - `docs/HEALTH-CHECKS.md` for relay verification
 - `docs/ROUTER-STATIC-ROUTES.md` for moving from NAT to cleaner LAN routing
@@ -126,6 +127,7 @@ stealth-vpn-safe/
     ├── FIREWALL-NOTES.md
     ├── HEALTH-CHECKS.md
     ├── HOME-GATEWAY-SYSTEMD.md
+    ├── HOME-SERVER-QUICKSTART.md
     ├── PLAIN-WIREGUARD.md
     ├── ROUTER-STATIC-ROUTES.md
     ├── SECONDARY-DEPLOY.md
