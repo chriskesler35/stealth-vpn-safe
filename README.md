@@ -58,7 +58,8 @@ Remote Laptop/Phone
 - `docs/FALLBACK-OPENVPN.md` for emergency TCP 443 fallback deployment
 - `docs/FALLBACK-SECONDARY-VPS.md` for the cleaner two-VPS fallback layout
 - `docs/SECONDARY-DEPLOY.md` for the dedicated fallback-VPS rollout
-- `docs/HOME-SERVER-QUICKSTART.md` for the practical home-gateway setup path
+- `docs/HOME-SERVER-QUICKSTART.md` for the Linux home-gateway setup path
+- `docs/HOME-SERVER-WINDOWS.md` for the Windows home-server setup path
 - `docs/HOME-GATEWAY-SYSTEMD.md` for persistent tunnel startup on the home gateway
 - `docs/HEALTH-CHECKS.md` for relay verification
 - `docs/ROUTER-STATIC-ROUTES.md` for moving from NAT to cleaner LAN routing
@@ -128,6 +129,7 @@ stealth-vpn-safe/
     ├── HEALTH-CHECKS.md
     ├── HOME-GATEWAY-SYSTEMD.md
     ├── HOME-SERVER-QUICKSTART.md
+    ├── HOME-SERVER-WINDOWS.md
     ├── PLAIN-WIREGUARD.md
     ├── ROUTER-STATIC-ROUTES.md
     ├── SECONDARY-DEPLOY.md
@@ -136,7 +138,8 @@ stealth-vpn-safe/
 
 ## Notes
 
-- This starter assumes Linux for the VPS and home gateway.
+- The VPS side assumes Linux.
+- The home-server side now has both Linux and Windows setup guides.
 - The sample home LAN CIDR is `192.168.50.0/24`.
 - The sample WireGuard overlay is `10.70.0.0/24`.
 - The sample OpenVPN and secondary fallback subnet is `10.71.0.0/24`.
