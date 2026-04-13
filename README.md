@@ -53,6 +53,7 @@ Main docs for that path:
 - `docs/DIRECT-WIREGUARD-WINDOWS.md`
 - `docs/DDNS-DUCKDNS-WINDOWS.md`
 - `docs/RDP-HARDENING-WINDOWS.md`
+- `docs/SECURITY-AUDIT-WINDOWS.md`
 - `docs/WINDOWS-GATEWAY-NOTES.md`
 
 ## Other Supported Paths
@@ -118,6 +119,7 @@ Read:
 - `scripts/update-duckdns.ps1` - update DuckDNS from the Windows home server
 - `scripts/lockdown-rdp-to-wireguard.ps1` - restrict RDP to the WireGuard subnet
 - `scripts/restore-default-rdp-firewall.ps1` - undo the RDP lockdown
+- `scripts/security-audit-windows.ps1` - read-only Windows exposure and hardening audit
 - `scripts/check-relays.sh` - relay health checks
 - `scripts/init-openvpn.sh` - initialize OpenVPN fallback config
 - `scripts/hash-wg-ui-password.sh` - helper for `wg-easy`
@@ -137,6 +139,7 @@ Read:
 - `docs/HOME-SERVER-WINDOWS.md`
 - `docs/DDNS-DUCKDNS-WINDOWS.md`
 - `docs/RDP-HARDENING-WINDOWS.md`
+- `docs/SECURITY-AUDIT-WINDOWS.md`
 - `docs/WINDOWS-GATEWAY-NOTES.md`
 
 ### Linux / Relay / Advanced Docs
