@@ -2,6 +2,14 @@
 
 This is a safe, open-source starter for a Tailscale-like remote access setup without relying on a commercial control plane.
 
+## Start Here
+
+If you want the fastest path instead of reading everything:
+- start with `docs/START-HERE.md`
+- for the common personal setup, use `docs/DIRECT-WIREGUARD-WINDOWS.md`
+- on Windows, run `powershell -ExecutionPolicy Bypass -File .\scripts\doctor-windows.ps1`
+- on Linux, run `./scripts/doctor-linux.sh`
+
 It is designed for:
 - remote access to a home lab behind NAT
 - a public VPS relay with a stable IP
@@ -51,7 +59,10 @@ Remote Laptop/Phone
 - `scripts/render-secondary-path-configs.sh` to render the secondary-VPS fallback WireGuard pair
 - `scripts/init-openvpn.sh` to generate a TCP 443 OpenVPN fallback config
 - `Makefile` for common bootstrap, render, start, and health-check tasks
+- `scripts/doctor-windows.ps1` for Windows prerequisite and next-step checks
+- `scripts/doctor-linux.sh` for Linux prerequisite and next-step checks
 - `scripts/check-relays.sh` to verify the main and fallback relay endpoints quickly
+- `docs/START-HERE.md` as the entry point for new users
 - `docs/ARCHITECTURE.md` with network plan, routing, and fallback guidance
 - `docs/DEPLOY.md` with a concrete deployment sequence
 - `docs/PLAIN-WIREGUARD.md` for the file-based relay option
@@ -95,6 +106,7 @@ Remote Laptop/Phone
 ```text
 stealth-vpn-safe/
 ├── .env.example
+├── LICENSE
 ├── Makefile
 ├── docker-compose.yml
 ├── docker-compose.openvpn.yml
@@ -112,6 +124,8 @@ stealth-vpn-safe/
 ├── scripts/
 │   ├── bootstrap-linux.sh
 │   ├── check-relays.sh
+│   ├── doctor-linux.sh
+│   ├── doctor-windows.ps1
 │   ├── hash-wg-ui-password.sh
 │   ├── init-openvpn.sh
 │   ├── render-peer-configs.sh
@@ -124,6 +138,7 @@ stealth-vpn-safe/
 │       └── wg-secondary.service
 └── docs/
     ├── ARCHITECTURE.md
+    ├── START-HERE.md
     ├── DECISIONS.md
     ├── DDNS-DUCKDNS-WINDOWS.md
     ├── DEPLOY.md
